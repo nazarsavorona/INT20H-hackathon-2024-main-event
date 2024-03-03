@@ -1,4 +1,5 @@
 from sklearn.cluster import KMeans, AgglomerativeClustering
+from sklearn.mixture import GaussianMixture
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 import torch
@@ -18,6 +19,14 @@ def hierarchical_clustering(data, n_clusters):
     agg_clustering = AgglomerativeClustering(n_clusters=n_clusters).fit(data_np)
 
     return torch.from_numpy(agg_clustering.labels_)
+
+
+def gmm_clustering(data, n_clusters, random_state=42, n_init=10):
+    data_np = data.cpu().numpy()
+
+    gmm = GaussianMixture(n_components=n_clusters, random_state=random_state, n_init=n_init).fit(data_np)
+
+    return torch.from_numpy(gmm.predict(data_np))
 
 
 def visualize_2d(noisy_tensors, centroids, labels):
